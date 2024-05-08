@@ -259,11 +259,11 @@ lean_obj_res lean_uv_stream_stop(b_lean_obj_arg socketObj, b_lean_obj_arg _rw) {
     return lean_uv_io_error(UV_EINVAL);
 
   lean_stream_callbacks_t* cbs = stream_callbacks(socket);
-  if (cbs->listen_callback == 0)
-    return lean_uv_io_error(UV_EINVAL);
 
-  lean_dec_ref(cbs->listen_callback);
-  cbs->listen_callback = 0;
+  if (cbs->listen_callback != 0) {
+    lean_dec_ref(cbs->listen_callback);
+    cbs->listen_callback = 0;
+  }
 
   // Stop read callback.
   if (cbs->read_callback) {
